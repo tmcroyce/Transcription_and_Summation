@@ -34,7 +34,7 @@ def set_background_image(image_path):
     st.markdown(f"""
         <style>
         body {{
-            background-image: url("data:image/jpeg;base64,{image_base64_string}");
+            background-image: url("data:image/png;base64,{image_base64_string}");
             background-size: cover;
         }}
         </style>
