@@ -25,6 +25,24 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+def get_image_base64_string(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode()
+
+def set_background_image(image_path):
+    image_base64_string = get_image_base64_string(image_path)
+    st.markdown(f"""
+        <style>
+        body {{
+            background-image: url("data:image/jpeg;base64,{image_base64_string}");
+            background-size: cover;
+        }}
+        </style>
+    """, unsafe_allow_html=True)
+
+# Example usage
+image_path = "photos/backg.png"  # Path to your background image
+set_background_image(image_path)
 
 
 # Setup Deepgram
