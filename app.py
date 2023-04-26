@@ -25,24 +25,69 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<style>
+/* Target the main buttons */
+button.css-1x8cf1d.edgvbvh10,
+/* Target the sidebar buttons */
+button.css-629wbf.edgvbvh10 {
+    background-color: #167A74;  /* Change to your desired background color */
+    color: #ffffff;  /* Change to your desired text color */
+}
+button.css-1x8cf1d.edgvbvh10:hover,
+button.css-629wbf.edgvbvh10:hover {
+    background-color: #1d9078;  /* Change to your desired hover background color */
+    color: #ffffff;  /* Change to your desired hover text color */
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 def get_image_base64_string(image_path):
     with open(image_path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode()
 
-def set_background_image(image_path):
-    image_base64_string = get_image_base64_string(image_path)
-    st.markdown(f"""
-        <style>
-        body {{
-            background-image: url("data:image/png;base64,{image_base64_string}") !important;
-            background-size: cover !important;
-        }}
-        </style>
-    """, unsafe_allow_html=True)
+
 
 # Example usage
 image_path = "photos/backg.png"  # Path to your background image
-set_background_image(image_path)
+image_base64_string = get_image_base64_string(image_path)
+
+# Define the custom CSS for the background
+custom_background = f"""
+    <style>
+    [data-testid="stAppViewContainer"] {{
+        background: linear-gradient(to right, #ffffff, #f1f8f7),
+                    url("data:image/png;base64,{image_base64_string}");
+        background-size: cover;
+    }}
+    </style>
+"""
+
+# Inject the custom CSS into the Streamlit app
+st.sidebar.markdown(custom_background, unsafe_allow_html=True)
+
+    # Define custom CSS for the gradient background
+custom_header = """
+<style>
+[data-testid="stHeader"] {
+background: linear-gradient(to right, #ffffff, #f1f8f7);
+}
+</style>
+"""
+
+# Inject the custom CSS into the Streamlit app
+st.markdown(custom_header, unsafe_allow_html=True)
+
+# Start the app container div
+st.markdown('<div class="app-container">', unsafe_allow_html=True)
+
+# User Session State Setup
+def get_user_session_state():
+    if 'session_state' not in st.session_state:
+        st.session_state['session_state'] = {}
+    return st.session_state['session_state']
+
 
 # Setup Deepgram
 api_key = st.secrets['deepgram_api']
@@ -50,12 +95,6 @@ client = Deepgram(api_key)
 
 # Setup OpenAI
 openai.api_key = st.secrets['openAI_API_Key']
-
-# User Session State Setup
-def get_user_session_state():
-    if 'session_state' not in st.session_state:
-        st.session_state['session_state'] = {}
-    return st.session_state['session_state']
 
 #API Call
 def process_code(user_code):
@@ -96,7 +135,7 @@ def create_download_link(text, filename):
 
 
 #Upload audio file
-uploaded_file = st.file_uploader("Choose an MP3 audio file to upload", type="mp3")
+uploaded_file = st.sidebar.file_uploader("Choose an MP3 audio file to upload", type="mp3")
 
 user_session_state = get_user_session_state()
 
@@ -160,7 +199,7 @@ if uploaded_file is not None:
         st.write('')
 
         # add button to download transcript
-        st.download_button(
+        st.sidebar.download_button(
             label="Download Transcript",
             data=user_session_state['new_transcript'].encode(),
             file_name="transcript.txt",
@@ -171,7 +210,7 @@ if uploaded_file is not None:
         pass
 
     if 'new_transcript' in user_session_state:
-        if st.button('Read Transcript'):
+        if st.sidebar.button('Read Transcript'):
             st.write(user_session_state['new_transcript'])
 
     if 'new_transcript' in user_session_state:
@@ -197,7 +236,7 @@ if uploaded_file is not None:
 
 
             # add button to download summary
-            st.download_button(
+            st.sidebar.download_button(
                 label="Download Transcript Summary",
                 data=user_session_state['transcript_summary'].encode(),
                 file_name="summary.txt",
@@ -220,6 +259,7 @@ if uploaded_file is not None:
             display: block;
             color: #1d9078;
             font-weight: bold;
+            background-color: #e6f2f0;
             padding: 10px;
             box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
             border-radius: 20px;
@@ -242,3 +282,5 @@ if uploaded_file is not None:
 #         }
 #         </style>
 #         """, unsafe_allow_html=True)
+# Close the app container div
+st.markdown('</div>', unsafe_allow_html=True)
