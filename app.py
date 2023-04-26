@@ -135,7 +135,7 @@ def create_download_link(text, filename):
 
 
 #Upload audio file
-uploaded_file = st.sidebar.file_uploader("Choose an MP3 audio file to upload", type="mp3")
+uploaded_file = st.file_uploader("Choose an MP3 audio file to upload", type="mp3")
 
 user_session_state = get_user_session_state()
 
