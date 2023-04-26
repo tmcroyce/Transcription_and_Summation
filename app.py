@@ -44,6 +44,8 @@ def set_background_image(image_path):
 image_path = "photos/backg.png"  # Path to your background image
 set_background_image(image_path)
 
+st.image(image_path, caption='Background Image')
+
 
 # Setup Deepgram
 api_key = st.secrets['deepgram_api']
