@@ -1,6 +1,7 @@
 import streamlit as st
 from moviepy.editor import *
 import tempfile
+from io import BytesIO
 import os
 
 # Title of the Streamlit app
